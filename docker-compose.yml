@@ -1,0 +1,38 @@
+version: '3'
+services:
+  timescaledb:
+    container_name: timescaledb
+    image: timescale/timescaledb:latest-pg15
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: defaultdb
+    command:
+      -cmax_wal_size=2GB
+  influxdb:
+    image: influxdb:1.7
+    environment:
+      - INFLUXDB_ADMIN_ENABLED=true 
+      - INFLUXDB_ADMIN_USER=root
+      - INFLUXDB_ADMIN_PASSWORD=root
+      - INFLUXDB_DB=demo
+      - INFLUXDB_HTTP_LOG_ENABLED=false
+      - INFLUXDB_REPORTING_DISABLED=true
+      - INFLUXDB_USER=local
+      - INFLUXDB_USER_PASSWORD=local
+    ports:
+      - 8083:8083
+      - 8086:8086
+      - 8088:8088
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          memory: 2048M
+        reservations:
+          memory: 1024M
+    volumes:
+      - ./local_volume_dir:/var/lib/influxdb

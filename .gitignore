@@ -1,2 +1,5 @@
 # local Influx volume
-local_volume_dir/
+local_volume_dir/*
+
+# mac OS
+.DS_Store
